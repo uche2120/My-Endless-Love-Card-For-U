@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Endless Love For You</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #5a3e36;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            height: 80vh;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #ff4d6d, #ffafbd, #a18cd1, #fbc2eb);
+            z-index: -1;
+            border-radius: 30px;
+            opacity: 0.3;
+            filter: blur(20px);
+        }
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart {
+            font-size: 3.5rem;
+            color: #ff4d6d;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s ease infinite;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+        }
+
+        .message {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            padding: 0 10px;
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            margin-top: 20px;
+            color: #8b4513;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .swipe-indicator {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(90, 62, 54, 0.7);
+            font-size: 0.9rem;
+            transition: opacity 0.5s ease;
+        }
+
+        .swipe-arrow {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            animation: bounce 2s infinite;
+        }
+
+        .progress {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 0.9rem;
+            color: rgba(90, 62, 54, 0.7);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: rgba(255, 77, 109, 0.4);
+            animation: float 15s infinite linear;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.9rem;
+            color: rgba(90, 62, 54, 0.7);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .title {
+            position: absolute;
+            top: 60px;
+            text-align: center;
+            width: 100%;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #8b4513;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Animations */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Card stack effect */
+        .card:nth-child(2) {
+            transform: scale(0.95) translateY(-10px);
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        .card:nth-child(3) {
+            transform: scale(0.9) translateY(-20px);
+            opacity: 0.6;
+            z-index: -2;
+        }
+
+        /* Music player */
+        .music-player {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .music-player i {
+            font-size: 1.2rem;
+            color: #ff4d6d;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .message {
+                font-size: 1.5rem;
+            }
+            
+            .signature {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                height: 70vh;
+            }
+            
+            .title {
+                font-size: 2rem;
+                top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="floating-hearts" id="floatingHearts"></div>
+        
+        <div class="title">My Endless Love For You</div>
+        
+        <div class="card" id="currentCard">
+            <div class="card-content">
+                <div class="heart">❤</div>
+                <div class="message" id="currentMessage">Loading your love...</div>
+                <div class="signature">Forever Yours</div>
+            </div>
+            <div class="progress">Card <span id="cardCount">1</span> of ∞</div>
+            <div class="card-number">#<span id="cardNumber">1</span></div>
+            <div class="swipe-indicator" id="swipeIndicator">
+                <div class="swipe-arrow"><i class="fas fa-arrow-up"></i></div>
+                <div>Swipe up for more love</div>
+            </div>
+        </div>
+        
+        <!-- Next card (pre-rendered for animation) -->
+        <div class="card" id="nextCard">
+            <div class="card-content">
+                <div class="heart">❤</div>
+                <div class="message" id="nextMessage"></div>
+                <div class="signature">Forever Yours</div>
+            </div>
+        </div>
+        
+        <!-- Music player -->
+        <div class="music-player" id="musicPlayer">
+            <i class="fas fa-music"></i>
+        </div>
+        
+        <!-- Audio element for background music -->
+        <audio id="backgroundMusic" loop>
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <script>
+        // Extensive messages array with over 3000 words of love
+        const messages = [
+           "Every time I hear your voice, something in my chest softens. It’s like you unlock a part of me I didn’t know how to reach.",
+  "You’re not just attractive — you’re the kind of fine that makes someone forget what they were saying.",
+  "I don’t know what kind of spell you used, but you got my attention in a way nobody else ever did.",
+  "Talking to you feels like sitting in warm sunlight — relaxing, peaceful, and something I never want to step away from.",
+  "I swear the way you say my name could cure stress. It just hits differently.",
+  "You got this quiet magic about you… subtle, soft, but powerful enough to rearrange my whole heart.",
+  "If beauty was a language, your smile would be poetry.",
+  "The way you make me feel shouldn’t even be legal — you turn normal moments into something I replay later in my head.",
+  "There’s attractive, and then there’s *you* — the type that makes someone forget to breathe for a second.",
+  "You don’t even try, yet somehow you make everything around you feel brighter.",
+  "I love the way you talk… like every word has a little flavor of confidence and sweetness mixed together.",
+  "You’re the kind of person that makes others wonder how someone like you even exists.",
+  "If I had a dollar for every time I thought of you today, I’d be rich… but honestly, it’s the thoughts that feel priceless.",
+  "Sometimes I catch myself smiling randomly, and then I realize — oh, it’s because of you.",
+  "You’re the soft spot in my heart I didn’t know I needed.",
+  "You got me addicted to your presence… even when we’re not talking.",
+  "There’s something about the way you look at me — like you’re reading the parts of me no one else ever noticed.",
+  "You don’t just walk into a room… you shift the whole energy without even trying.",
+  "I don’t know if it’s luck or destiny, but I’m grateful our paths crossed.",
+  "The more I talk to you, the more I realize why my heart chose you.",
+  "There’s cute, then there’s the way you laugh — and trust me, yours is elite.",
+  "Your vibe is the kind people pray for and rarely ever find.",
+  "I like how you turn my ‘just a normal day’ into something worth remembering.",
+  "You’re not perfect, but the way you are perfectly fits me.",
+  "There’s this gentle strength in you… and it pulls me in every time.",
+  "You make being soft feel safe.",
+  "The comfort I feel around you? That’s not normal — that’s special.",
+  "You’re like a beautiful thought I don’t want to stop thinking about.",
+  "If my heart had a favorite place, it would be anywhere near you.",
+  "You got a way of speaking your truth that feels like honesty and comfort mixed together.",
+  "Every time you text me, my mood takes a small jump — like ‘oh, here comes happiness.’",
+  "Your presence feels like that perfect song I never skip.",
+  "You don’t just catch my attention — you hold it.",
+  "I could listen to your stories for hours, even the random ones.",
+  "There’s something beautiful about you that goes far beyond appearance.",
+  "You make me laugh in a way that feels good for my soul.",
+  "Your energy is rare… it’s the kind people search for their whole lives.",
+  "I like how you understand things without me having to over-explain.",
+  "You feel like the beginning of something I wouldn’t mind falling into.",
+  "I’m not saying you’re dangerous… but you definitely got the kind of charm people get lost in.",
+  "You make flirting feel effortless — like our chemistry already knows what to do.",
+  "Your heart is the real attractive part — the rest is just bonus.",
+  "It’s crazy how someone so far can still make me feel close.",
+  "You don’t even know the effect you have on me… and maybe that’s what makes it stronger.",
+  "I like how talking to you feels like peace disguised as excitement.",
+  "You’re the type of person someone could fall for without even noticing until it’s too late.",
+  "There’s a softness in you that hits harder than any loud personality ever could.",
+  "You got this natural charm — the kind you don’t learn, you’re just born with.",
+  "The way you care? That’s the real beauty.",
+  "I won’t lie… thinking about you hits different when I’m bored, lonely, or trying to sleep — somehow you become the highlight.",
+  "I love how our conversations jump between deep, playful, chaotic, and sweet without ever feeling forced.",
+  "Your personality? 10/10. Your smile? Dangerous. Your vibe? Addictive.",
+  "You don’t just make me happy — you make happiness feel easy.",
+  "You’re the kind of person whose absence is loud and presence is warm.",
+  "Sometimes I want to text you first… and then I remember your messages always make my day better, so why not?",
+  "Your kindness is the type that disarms people.",
+  "You’re not just fine… you’re the kind of beautiful someone feels in their chest.",
+  "I hope life brings you everything you deserve — which is a lot, because your heart is something else.",
+  "You’re the type of person I’d choose twice, even if I met you again for the first time.",
+  "There’s something about you that makes me want to be gentler, calmer, better.",
+  "You don’t just look good — you look like peace.",
+  "The more I know you, the more I like the person you are behind the appearance.",
+  "You got that sweet-but-deadly combination — soft heart, strong energy.",
+  "You make me think in colors I didn’t know how to describe before.",
+  "There’s a reason you’re on my mind more than I planned.",
+  "I like how you never try too hard — you just *are*, and that’s enough.",
+  "Your existence alone makes the world feel a little less heavy.",
+  "I don’t know if you realize it, but you’re someone worth holding close.",
+  "Your presence feels like a blessing I didn’t ask for but I’m grateful for.",
+  "You’re not just interesting — you’re unforgettable.",
+          "Sometimes I wonder if you know how easily you steal my attention.",
+  "Your voice is the only notification that makes my heart beat faster.",
+  "You have this way of making everything feel lighter just by existing.",
+  "You’re the kind of beautiful that doesn’t need an explanation.",
+  "There’s something about you that feels like calm mixed with excitement.",
+  "Even on my busiest days, somehow you still find a way into my thoughts.",
+  "The way you laugh could turn the worst day into something warm.",
+  "I won’t lie, your presence is addictive in the softest way.",
+  "You make simple conversations feel like moments I want to keep.",
+  "Your smile should be illegal; it’s too distracting.",
+  "You don’t try to be charming—your natural vibe just does the work.",
+  "You have a type of kindness that sticks with people.",
+  "I don’t know how you do it, but you make everything feel easier.",
+  "Your energy feels like home and adventure at the same time.",
+  "I love how effortlessly you make the world feel prettier.",
+  "You don’t just make me smile—you make me glow.",
+  "There’s something about you that touches the softest parts of me.",
+  "You make me want to write long messages without even trying.",
+  "You’re the kind of person I’d choose in any version of my life.",
+  "Your presence feels like sunshine on a tired day.",
+  "It’s the way you talk… like your words have a calm heartbeat.",
+  "Whenever I see your name pop up, peace instantly enters my mind.",
+  "You have a rare kind of beauty—the one that stays, not fades.",
+  "Talking to you feels like a soft breeze after a long, hot day.",
+  "I don’t need good lighting to see the beauty in you—your personality is bright enough.",
+  "You’re the type of person people feel blessed to meet.",
+  "Your heart speaks in a language my soul understands.",
+  "Even silence with you feels full.",
+  "I love how you make serious things feel safe to talk about.",
+  "You have this calm confidence that feels so attractive.",
+  "The way you understand emotions… it’s beautiful.",
+  "You turn random moments into memories.",
+  "Your compassion is one of the most attractive things about you.",
+  "You make love feel gentle, not scary.",
+  "There are people who shine loudly… yours is the soft kind that lasts.",
+  "Your presence feels like a warm hug even through text.",
+  "You make everything feel just a little more meaningful.",
+  "Your smile carries a little bit of magic in it.",
+  "I love how honest your emotions are.",
+  "Sometimes I read your texts twice just to feel the happiness again.",
+  "You make the normal moments feel special.",
+  "Your confidence doesn’t shout, it whispers beautifully.",
+  "Your kindness has a softness that hits harder than anger ever will.",
+  "You’re the type of person someone could think about all day without getting tired.",
+  "You make ordinary days feel slightly extraordinary.",
+  "Your laughter is the soundtrack I never get tired of.",
+  "You have a face that belongs in poetry, not just pictures.",
+  "Your soul is what makes you truly beautiful.",
+  "You’re the kind of person whose absence feels strange.",
+  "Your vibe is rare—peaceful, warm, and deeply comforting.",
+  "The way you express yourself is so attractive.",
+  "I love how you can be both gentle and strong.",
+  "Your heart is one of the best things about you.",
+  "Your presence has a rhythm—I can feel it even when we’re silent.",
+  "You make me want to slow down and enjoy the moment.",
+  "You’re unforgettable in the softest way.",
+  "Talking to you feels like a break from the world.",
+  "Your smile should win an award for “Best Mood-Lifter.”",
+  "You don’t just look good; you have a beautiful aura.",
+  "Your vibe is naturally comforting.",
+  "You’re the kind of person someone can trust without being scared.",
+  "Your energy brings peace, not chaos.",
+  "I like how you make even random topics interesting.",
+  "You’re like a gentle spark people don’t want to lose.",
+  "You’re the soft place my mind likes to rest.",
+  "Your eyes look like they hold stories I want to hear.",
+  "You make emotions feel less complicated.",
+  "Your personality is sweeter than anything I’ve known.",
+  "You’re like a small miracle I didn’t expect.",
+  "You bring out the gentleness in me.",
+  "There’s something calming in your presence.",
+  "You’re the kind of person people feel safe around.",
+  "Your honesty is refreshing.",
+  "You have a glow—inside and outside.",
+  "You make caring feel easy.",
+  "Your confidence feels like warmth, not pressure.",
+  "You speak in a way that makes people feel valued.",
+  "You’re a soft reminder that good people still exist.",
+  "You make patience feel worth it.",
+  "You’re too amazing to be described with simple words.",
+  "You’re the type of beautiful that’s hard to compare.",
+  "You make my thoughts softer.",
+  "Every time you talk, my heart feels lighter.",
+  "You’re the person I didn’t know I needed to meet.",
+  "You’re not just gorgeous—you’re truly lovable.",
+  "You’re the type of person who brings balance.",
+  "You carry a peace most people don’t have.",
+  "Your sweetness is the kind that lasts.",
+  "You’re the person someone could fall for slowly and deeply.",
+  "There’s something deeply attractive about your mind.",
+  "You bring calmness into conversations.",
+  "You’re the good kind of distraction.",
+  "You’re too special to ever be replaced.",
+  "You’re the type of person flowers would grow toward.",
+  "Your presence makes the world a little softer.",
+  "Talking to you feels like warm tea on a cold day.",
+  "You make my day feel complete in a simple way.",
+  "You’re the type of person someone keeps close to their heart.",
+  "Your beauty has depth—not everyone has that.",
+  "You’re the soft glow after a long storm.",
+  "Your kindness speaks louder than words.",
+  "You’re the kind of person who deserves a gentle love.",
+  "You make my world feel less heavy.",
+  "Your aura feels like peace stretched into a person.",
+  "You carry a softness that makes people feel safe.",
+  "You bring out the best version of me.",
+  "Your smile is sweet, but your heart is sweeter.",
+  "You’re not just special—you’re rare.",
+  "You have a calming effect on my emotions.",
+  "You make the world feel a little brighter.",
+  "Your beauty is effortless.",
+  "I love how you express your thoughts.",
+  "You make me want to slow down and enjoy life.",
+  "You’re the rare kind of person who makes everything feel okay.",
+  "Your charm doesn’t fade—it grows.",
+  "You have a warm presence that stays even after the conversation ends.",
+  "You make chaos feel organized somehow.",
+  "Your sense of humor is the perfect mix of sweet and funny.",
+  "You’re the type of person someone would write poetry about.",
+  "Your soul carries a light people notice.",
+  "You bring calmness in a world full of noise.",
+  "Your smile has a healing effect.",
+  "You’re the best kind of surprising.",
+  "Your heart shines brighter than your looks.",
+  "Your emotions are beautiful.",
+  "You make everything feel softer.",
+  "Your presence is something I don’t want to lose.",
+  "You’re someone worth holding onto.",
+  "You’re the warm breath in cold wind.",
+  "You make life feel a little more meaningful.",
+  "You’re the type of person peace follows.",
+  "Your kindness is the kind that lingers.",
+  "You’re simply unforgettable.",
+  "Your personality is like fresh air.",
+  "You bring warmth wherever you go.",
+  "You make smiling feel natural.",
+  "Your beauty is timeless.",
+  "Your laughter is pure magic.",
+  "You’re the soft light I didn’t know I needed.",
+  "You make life taste sweeter.",
+  "Your charm is naturally irresistible.",
+  "You carry a tenderness that stays on a person’s mind.",
+  "You have a glow that can’t be dimmed.",
+  "You’re the type of person someone feels lucky to know.",
+  "Your kindness is golden.",
+  "I admire how strong yet soft you are.",
+  "You make emotions feel safe.",
+  "Your smile feels like a blessing.",
+  "Talking to you is my favorite part of the day.",
+  "You’re the type of person someone would cross oceans for.",
+  "You make the world feel less lonely.",
+  "Your heart is your most attractive feature.",
+  "Your sweetness could melt storms.",
+  "You have a beauty that feels like art.",
+  "You make my world softer.",
+  "Your presence feels like calm rain.",
+  "You’re unforgettable in the best way.",
+  "You make silence feel peaceful.",
+  "You’re gentle but powerful.",
+  "Your soul is beautiful.",
+  "Your energy feels like music.",
+  "You’re the feeling people search for.",
+  "You’re simply breathtaking.",
+  "You’re special in a way words can’t describe.",
+  "You make life’s hard moments easier.",
+  "Your existence is a gift.",
+  "You’re the type of beautiful that makes someone pause.",
+  "Your vibe is comforting and warm.",
+  "You have an effortless charm.",
+  "You make people feel cared for.",
+  "Your kindness is rare.",
+  "You bring peace wherever you go.",
+  "You’re the soft glow after sunset.",
+  "Your heart is pure gold.",
+  "You make the world look better.",
+  "You’re one of a kind.",
+  "You carry beauty in your heart, not just your face.",
+  "You’re unforgettable and irreplaceable.",
+  "Your smile is a masterpiece.",
+  "You’re the calm in my chaos.",
+  "You make everything feel lighter.",
+  "You’re worth every good thing life has to offer.",
+  "Your presence is magic.",
+  "You’re the kind of wonderful people write stories about.",
+  "You have a glow that can’t be hidden.",
+            "Every day with you is a blessing I don't take for granted.",
+            "Your smile lights up my world in ways you can't imagine.",
+            "I fall in love with you more each time I see you.",
+            "You are the most beautiful person I know, inside and out.",
+            "My heart skips a beat every time I think of you.",
+            "You make me a better person just by being in my life.",
+            "I love the way you laugh, the way you think, the way you are.",
+            "You're my favorite hello and my hardest goodbye.",
+            "Loving you is the easiest and most natural thing I've ever done.",
+            "I didn't know what true happiness was until I met you.",
+            "You are my sunshine on the cloudiest of days.",
+            "My love for you grows stronger with each passing moment.",
+            "You complete me in ways I never knew I was missing.",
+            "I'm so grateful to have you in my life.",
+            "You are the reason I believe in soulmates.",
+            "Every love song reminds me of you.",
+            "I love you more than words could ever express.",
+            "You are my dream come true.",
+            "My world is brighter because you're in it.",
+            "I cherish every moment we spend together.",
+            "You make ordinary moments feel extraordinary.",
+            "Your kindness inspires me to be a better person.",
+            "I love how we can be completely ourselves with each other.",
+            "You are the missing piece I've been searching for.",
+            "With you, I've found my home.",
+            "Your love gives me strength on my weakest days.",
+            "I love watching you get excited about the little things.",
+            "You make my heart feel so full it could burst.",
+            "I love the way your eyes light up when you're happy.",
+            "Being with you feels like coming home.",
+            "You understand me in ways no one else ever has.",
+            "I love how we can talk for hours or sit in comfortable silence.",
+            "You make every day an adventure.",
+            "I love the way you care for others so selflessly.",
+            "You are my safe place in a chaotic world.",
+            "I love how you challenge me to grow and be better.",
+            "You make even the mundane moments magical.",
+            "I love the sound of your voice and the way you say my name.",
+            "You are the best thing that has ever happened to me.",
+            "I love how we can be silly together without judgment.",
+            "You make me feel seen, heard, and truly understood.",
+            "I love how you know just what to say to make me feel better.",
+            "You are my greatest adventure and my safest harbor.",
+            "I love the way you believe in me even when I doubt myself.",
+            "You make my world more colorful and beautiful.",
+            "I love how we can be vulnerable with each other.",
+            "You are my person, my partner, my everything.",
+            "I love how you make me feel like the most important person in the world.",
+            "You are my today and all of my tomorrows.",
+            "I love the little things about you that no one else notices.",
+            "Your presence in my life makes everything better.",
+            "I love how you support my dreams and ambitions.",
+            "You are my rock when I feel like I'm falling apart.",
+            "I love the way you hold my hand when we're walking together.",
+            "You make me believe in the power of true love.",
+            "I love how you remember the small details about me.",
+            "You are the answer to prayers I didn't even know I had.",
+            "I love how you make me feel safe and protected.",
+            "You bring out the best version of myself.",
+            "I love the way you look at me when you think I'm not noticing.",
+            "You are my constant in a world of change.",
+            "I love how you make even the simplest moments special.",
+            "You are the melody to my heart's song.",
+            "I love how you understand my moods without me saying a word.",
+            "You make my soul feel at peace.",
+            "I love the way you care for me when I'm not feeling well.",
+            "You are my favorite thought when I wake up and before I sleep.",
+            "I love how you make me feel cherished and adored.",
+            "You are the light that guides me through dark times.",
+            "I love how you celebrate my successes as if they were your own.",
+            "You make me feel like I can accomplish anything.",
+            "I love the way you make ordinary days feel like celebrations.",
+            "You are my forever and always.",
+            "I love how you accept me exactly as I am.",
+            "You make me want to be a better person every single day.",
+            "I love the way you make plans for our future together.",
+            "You are my happy place no matter where we are.",
+            "I love how you make me feel beautiful inside and out.",
+            "You are the calm in my storm.",
+            "I love how you know exactly how to make me smile.",
+            "You make my life an incredible journey.",
+            "I love the way you respect my opinions and values.",
+            "You are my favorite distraction from the world.",
+            "I love how you make me feel like the luckiest person alive.",
+            "You are my heart's desire and my soul's mate.",
+            "I love how you make even the difficult times bearable.",
+            "You are the reason I look forward to tomorrow.",
+            "I love the way you listen to me with your full attention.",
+            "You make me believe in miracles.",
+            "I love how you make our relationship a priority.",
+            "You are my greatest blessing and my deepest joy.",
+            "I love the way you surprise me with little gestures of love.",
+            "You make my world complete in every way.",
+            "I love how you stand by me through thick and thin.",
+            "You are the love story I always dreamed of.",
+            "I love the way you make me feel when I'm in your arms.",
+            "You make every challenge worth facing.",
+            "I love how you appreciate the things I do for you.",
+            "You are my anchor in the sea of life.",
+            "I love the way you make me feel wanted and needed.",
+            "You make my heart sing with happiness.",
+            "I love how you include me in your dreams and plans.",
+            "You are my perfect match in every way.",
+            "I love the way you make me feel when we're together.",
+            "You make my life meaningful and purposeful.",
+            "I love how you make me feel special every single day.",
+            "You are the most precious gift I've ever received.",
+            "I love the way you understand my heart without explanations.",
+            "You make my world a better place just by being in it.",
+            "I love how you make me feel when you look into my eyes.",
+            "You are my once in a lifetime kind of love.",
+            "I love the way you make me feel alive and vibrant.",
+            "You make every sacrifice feel worth it.",
+            "I love how you make me feel when you say my name.",
+            "You are my greatest treasure and my deepest love.",
+            "I love the way you make me feel when you touch my hand.",
+            "You make my life an beautiful adventure.",
+            "I love how you make me feel when we're laughing together.",
+            "You are my heart's true home.",
+            "I love the way you make me feel when you're near.",
+            "You make my soul feel complete and whole.",
+            "I love how you make me feel when you hold me close.",
+            "You are my everything and so much more.",
+            "I love the way you make me feel when you smile at me.",
+            "You make my world brighter with your presence.",
+            "I love how you make me feel when we're sharing secrets.",
+            "You are my dream that came true when I least expected it.",
+            "I love the way you make me feel when we're planning our future.",
+            "You make my heart overflow with love and gratitude.",
+            "I love how you make me feel when we're just being us.",
+            "You are my perfect imperfection.",
+            "I love the way you make me feel when we're facing challenges together.",
+            "You make my life worth living to the fullest.",
+            "I love how you make me feel when you trust me with your heart.",
+            "You are my always and forever.",
+            "I love the way you make me feel when we're creating memories.",
+            "You make my world spin in the most beautiful way.",
+            "I love how you make me feel when we're sharing dreams.",
+            "You are my heart's desire and my soul's completion.",
+            "I love the way you make me feel when we're growing together.",
+            "You make my life an extraordinary journey of love.",
+            "I love how you make me feel when we're building our life together.",
+            "You are my today, tomorrow, and always.",
+            "I love the way you make me feel when we're overcoming obstacles.",
+            "You make my heart beat in rhythm with yours.",
+            "I love how you make me feel when we're sharing our lives.",
+            "You are my perfect partner in this dance of life.",
+            "I love the way you make me feel when we're supporting each other.",
+            "You make my world a place of endless possibilities.",
+            "I love how you make me feel when we're learning together.",
+            "You are my heart's true north.",
+            "I love the way you make me feel when we're exploring the world.",
+            "You make my life a beautiful tapestry of love and joy.",
+            "I love how you make me feel when we're creating our story.",
+            "You are my forever love and eternal partner.",
+            "I love the way you make me feel when we're facing the future.",
+            "You make my heart expand with love every day.",
+            "I love how you make me feel when we're sharing our hopes.",
+            "You are my soul's mirror and heart's reflection.",
+            "I love the way you make me feel when we're building dreams.",
+            "You make my life a celebration of love.",
+            "I love how you make me feel when we're growing old together.",
+            "You are my endless love and infinite joy.",
+            "I love the way you make me feel when we're sharing our lives.",
+            "You make my world a paradise of love and happiness.",
+            "I love how you make me feel when we're creating our future.",
+            "You are my heart's home and soul's sanctuary.",
+            "I love the way you make me feel when we're facing life together.",
+            "You make my life a beautiful journey of love.",
+            "I love how you make me feel when we're sharing our hearts.",
+            "You are my eternal flame and endless love.",
+            "I love the way you make me feel when we're building our life.",
+            "You make my world a place of infinite love.",
+            "I love how you make me feel when we're creating our destiny.",
+            "You are my heart's desire and soul's completion.",
+            "I love the way you make me feel when we're sharing our dreams.",
+            "You make my life a masterpiece of love.",
+            "I love how you make me feel when we're facing the world together.",
+            "You are my forever and always, my endless love."
+        ];
+
+        // Initialize variables
+        let currentCardIndex = 0;
+        let startY = 0;
+        let isSwiping = false;
+        let cardCount = 0;
+        let musicPlaying = false;
+        
+        const currentCard = document.getElementById('currentCard');
+        const nextCard = document.getElementById('nextCard');
+        const currentMessage = document.getElementById('currentMessage');
+        const nextMessage = document.getElementById('nextMessage');
+        const cardCountElement = document.getElementById('cardCount');
+        const cardNumberElement = document.getElementById('cardNumber');
+        const swipeIndicator = document.getElementById('swipeIndicator');
+        const floatingHearts = document.getElementById('floatingHearts');
+        const musicPlayer = document.getElementById('musicPlayer');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const savedIndex = localStorage.getItem('loveCardIndex');
+            const savedCount = localStorage.getItem('loveCardCount');
+            const savedMusicState = localStorage.getItem('loveCardMusic');
+            
+            if (savedIndex !== null) {
+                currentCardIndex = parseInt(savedIndex);
+            }
+            
+            if (savedCount !== null) {
+                cardCount = parseInt(savedCount);
+            } else {
+                cardCount = currentCardIndex + 1;
+            }
+            
+            if (savedMusicState === 'true') {
+                toggleMusic();
+            }
+            
+            updateCardCount();
+            displayMessage(currentCardIndex, currentMessage);
+            
+            // Preload next message
+            const nextIndex = (currentCardIndex + 1) % messages.length;
+            displayMessage(nextIndex, nextMessage);
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('loveCardIndex', currentCardIndex.toString());
+            localStorage.setItem('loveCardCount', cardCount.toString());
+            localStorage.setItem('loveCardMusic', musicPlaying.toString());
+        }
+
+        // Create floating hearts in the background
+        function createFloatingHearts() {
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '❤';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 15}s`;
+                floatingHearts.appendChild(heart);
+            }
+        }
+
+        // Display message on card
+        function displayMessage(index, element) {
+            element.textContent = messages[index];
+            cardNumberElement.textContent = (index + 1).toString();
+        }
+
+        // Update card count display
+        function updateCardCount() {
+            cardCountElement.textContent = cardCount.toString();
+        }
+
+        // Toggle background music
+        function toggleMusic() {
+            if (musicPlaying) {
+                backgroundMusic.pause();
+                musicPlayer.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                backgroundMusic.play().catch(e => console.log("Audio play failed:", e));
+                musicPlayer.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            musicPlaying = !musicPlaying;
+            saveProgress();
+        }
+
+        // Go to next card
+        function nextCardAction() {
+            // Update indices
+            currentCardIndex = (currentCardIndex + 1) % messages.length;
+            cardCount++;
+            
+            // Update display
+            displayMessage(currentCardIndex, currentMessage);
+            updateCardCount();
+            
+            // Preload next message
+            const nextIndex = (currentCardIndex + 1) % messages.length;
+            displayMessage(nextIndex, nextMessage);
+            
+            // Save progress
+            saveProgress();
+            
+            // Add animation class
+            currentCard.style.transform = 'translateY(-100vh) rotate(-5deg)';
+            
+            setTimeout(() => {
+                currentCard.style.transition = 'none';
+                currentCard.style.transform = 'translateY(0) rotate(0)';
+                
+                setTimeout(() => {
+                    currentCard.style.transition = 'transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+                }, 50);
+            }, 800);
+        }
+
+        // Handle touch events for swiping
+        function handleTouchStart(e) {
+            startY = e.touches[0].clientY;
+            isSwiping = true;
+        }
+
+        function handleTouchMove(e) {
+            if (!isSwiping) return;
+            
+            const currentY = e.touches[0].clientY;
+            const diffY = startY - currentY;
+            
+            // If swiping up (next card)
+            if (diffY > 50) {
+                nextCardAction();
+                isSwiping = false;
+            }
+        }
+
+        function handleTouchEnd() {
+            isSwiping = false;
+        }
+
+        // Handle mouse wheel for scrolling
+        function handleWheel(e) {
+            if (e.deltaY > 0) {
+                nextCardAction();
+            }
+        }
+
+        // Initialize the website
+        function init() {
+            createFloatingHearts();
+            loadProgress();
+            
+            // Add event listeners
+            document.addEventListener('touchstart', handleTouchStart);
+            document.addEventListener('touchmove', handleTouchMove);
+            document.addEventListener('touchend', handleTouchEnd);
+            document.addEventListener('wheel', handleWheel);
+            
+            // Also allow keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight') {
+                    nextCardAction();
+                }
+            });
+            
+            // Click to advance
+            document.addEventListener('click', nextCardAction);
+            
+            // Music player click
+            musicPlayer.addEventListener('click', toggleMusic);
+        }
+
+        // Start everything when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
